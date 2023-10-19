@@ -9,6 +9,7 @@ export default class UserStore {
   }
   setIsAuth(bool:boolean) {
     this._isAuth = bool;
+    console.log(this._isAuth)  // to remove in future
   }
   setUser(user:object) {
     this._user = user;

@@ -1,34 +1,41 @@
 import { useContext } from 'react';
-import { Context } from '../main';
-import { Button, Container, Nav, Navbar } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
-import { SHOP__ROUTE } from '../utils/consts';
-import { observer } from 'mobx-react-lite';
 
-const NavBar: React.FC = observer(() => {
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import { NavLink } from 'react-router-dom';
+import { ADMIN__ROUTE, LOGIN__ROUTE, SHOP__ROUTE } from '../utils/consts';
+import { Button } from 'react-bootstrap';
+import { observer } from 'mobx-react-lite';
+import Container from 'react-bootstrap/Container';
+import { useNavigate } from 'react-router-dom';
+import { Context } from '../main';
+const NavBar = observer(() => {
   const { user } = useContext(Context);
+  const navigate = useNavigate();
+
+  const logOut = () => {
+    user.setUser({});
+    user.setIsAuth(false);
+  };
+
   return (
-    <Navbar bg="dark" data-bs-theme="dark">
+    <Navbar bg="dark" variant="dark">
       <Container>
-        <NavLink to={SHOP__ROUTE} style={{ color: 'white' }}>
-          Shop
+        <NavLink style={{ color: 'white' }} to={SHOP__ROUTE}>
+          КупиДевайс
         </NavLink>
         {user.getIsAuth() ? (
-          <Nav className="me-auto" style={{ color: 'white' }}>
-            <Button variant={'outline-light'}>Админ панель</Button>
-            <Button variant={'outline-light'} onClick={() => user.setIsAuth(false)}>
+          <Nav className="ml-auto" style={{ color: 'white' }}>
+            <Button variant={'outline-light'} onClick={() => navigate(ADMIN__ROUTE)}>
+              Админ панель
+            </Button>
+            <Button variant={'outline-light'} onClick={() => logOut()} className="ml-2">
               Выйти
             </Button>
           </Nav>
         ) : (
-          <Nav className="me-auto" style={{ color: 'white' }}>
-            <Button
-              variant={'outline-light'}
-              onClick={() => {
-                user.setIsAuth(true);
-                console.log(user.isAuth);
-                console.log(user);
-              }}>
+          <Nav className="ml-auto" style={{ color: 'white' }}>
+            <Button variant={'outline-light'} onClick={() => navigate(LOGIN__ROUTE)}>
               Авторизация
             </Button>
           </Nav>

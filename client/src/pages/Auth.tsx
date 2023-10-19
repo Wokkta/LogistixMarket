@@ -1,45 +1,76 @@
-import { Container, Card, Form, Row, Button, Col } from 'react-bootstrap';
-import { NavLink, useLocation } from 'react-router-dom';
-import { LOGIN__ROUTE, REGISTRATION__ROUTE } from '../utils/consts';
+import React, { useContext, useState } from 'react';
+import { Container, Form } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { LOGIN__ROUTE, REGISTRATION__ROUTE, SHOP__ROUTE } from '../utils/consts';
+import { login, registration } from '../http/userAPI';
+import { observer } from 'mobx-react-lite';
+import { Context } from '../main';
 
-function Auth() {
+const Auth = observer(() => {
+  const { user } = useContext(Context);
   const location = useLocation();
+  const navigate = useNavigate();
   const isLogin = location.pathname === LOGIN__ROUTE;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const click = async () => {
+    try {
+      let data;
+      if (isLogin) {
+        data = await login(email, password);
+      } else {
+        data = await registration(email, password);
+      }
+      user.setUser(user);
+      user.setIsAuth(true);
+      navigate(SHOP__ROUTE);
+    } catch (error) {
+      alert(error.response?.data.message);
+    }
+  };
 
   return (
     <Container
       className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: '100vh', minWidth: '50vw' }}>
-      <Card className="d-flex flex-column">
-        <h2 className="text-center">{isLogin ? 'Авторизация' : 'Регистрация'}</h2>
+      style={{ height: window.innerHeight - 54 }}>
+      <Card style={{ width: 600 }} className="p-5">
+        <h2 className="m-auto">{isLogin ? 'Авторизация' : 'Регистрация'}</h2>
         <Form className="d-flex flex-column">
-          <Form.Control className="mt-2" placeholder="Введите email" />
-          <Form.Control className="mt-2" placeholder="Введите пароль" />
-        </Form>
-        <Row className="mt-3 d-flex align-items-center">
-          {isLogin ? (
-            <Col xs={12} md={6} className="text-md-left text-center">
+          <Form.Control
+            className="mt-3"
+            placeholder="Введите ваш email..."
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Form.Control
+            className="mt-3"
+            placeholder="Введите ваш пароль..."
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+          />
+          <Row className="d-flex justify-content-between mt-3 pl-3 pr-3">
+            {isLogin ? (
               <div>
-                Нет аккаунта? <NavLink to={REGISTRATION__ROUTE}>Зарегистрируйтесь</NavLink>
+                Нет аккаунта? <NavLink to={REGISTRATION__ROUTE}>Зарегистрируйся!</NavLink>
               </div>
-            </Col>
-          ) : (
-            <Col xs={12} md={6} className="text-md-left text-center">
+            ) : (
               <div>
-                Есть аккаунт? <NavLink to={LOGIN__ROUTE}>Войдите</NavLink>
+                Есть аккаунт? <NavLink to={LOGIN__ROUTE}>Войдите!</NavLink>
               </div>
-            </Col>
-          )}
-
-          <Col xs={12} md={6} className="text-md-right text-center mt-2 mt-md-0">
-            <Button variant="outline-success" style={{ whiteSpace: 'nowrap' }}>
-              {isLogin ? 'Войти' : 'Зарегистрироваться'}
+            )}
+            <Button variant={'outline-success'} onClick={click}>
+              {isLogin ? 'Войти' : 'Регистрация'}
             </Button>
-          </Col>
-        </Row>
+          </Row>
+        </Form>
       </Card>
     </Container>
   );
-}
+});
 
 export default Auth;

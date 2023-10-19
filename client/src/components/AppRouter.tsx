@@ -5,10 +5,10 @@ import { useContext } from 'react';
 import { Context } from '../main';
 function AppRouter() {
   const { user } = useContext(Context);
-
+  console.table(user.getIsAuth());
   return (
     <Routes>
-      {user.isAuth &&
+      {user.getIsAuth() &&
         authRoutes.map(({ path, Component }) => (
           <Route key={path} path={path} Component={Component} />
         ))}
