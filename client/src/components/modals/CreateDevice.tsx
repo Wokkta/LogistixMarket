@@ -6,6 +6,8 @@ import { createDevice, fetchBrands, fetchDevices, fetchTypes } from '../../http/
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../main';
 
+// make brands depended on category
+
 const CreateDevice = observer(({ show, onHide }) => {
   const { device } = useContext(Context);
   const [name, setName] = useState('');
@@ -51,7 +53,7 @@ const CreateDevice = observer(({ show, onHide }) => {
       <Modal.Body>
         <Form>
           <Dropdown className="mt-2 mb-2">
-            <Dropdown.Toggle>{device.selectedType.name || 'Выберите тип'}</Dropdown.Toggle>
+            <Dropdown.Toggle>{device.selectedType.name || 'Выберите категорию'}</Dropdown.Toggle>
             <Dropdown.Menu>
               {device.types.map((type) => (
                 <Dropdown.Item onClick={() => device.setSelectedType(type)} key={type.id}>
@@ -61,7 +63,7 @@ const CreateDevice = observer(({ show, onHide }) => {
             </Dropdown.Menu>
           </Dropdown>
           <Dropdown className="mt-2 mb-2">
-            <Dropdown.Toggle>{device.selectedBrand.name || 'Выберите тип'}</Dropdown.Toggle>
+            <Dropdown.Toggle>{device.selectedBrand.name || 'Выберите бренд'}</Dropdown.Toggle>
             <Dropdown.Menu>
               {device.brands.map((brand) => (
                 <Dropdown.Item onClick={() => device.setSelectedBrand(brand)} key={brand.id}>

@@ -10,12 +10,16 @@ const DevicePage = () => {
   useEffect(() => {
     fetchOneDevice(id).then((data) => setDevice(data));
   }, []);
-
+  console.log('url ' + import.meta.env.VITE_API_URL);
   return (
     <Container className="mt-3">
       <Row>
         <Col md={4}>
-          <Image width={300} height={300} src={import.meta.env.REACT_APP_API_URL + device.img} />
+          <Image
+            width={300}
+            height={300}
+            src={import.meta.env.VITE_API_URL || 'http://localhost:7000/' + device.img}
+          />
         </Col>
         <Col md={4}>
           <Row className="d-flex flex-column align-items-center">

@@ -8,7 +8,11 @@ const DeviceItem = ({ device }) => {
   return (
     <Col md={3} onClick={() => navigate(DEVICE__ROUTE + '/' + device.id)}>
       <Card style={{ width: 150, cursor: 'pointer' }} border="light">
-        <Image width={150} height={150} src={device.img} />
+        <Image
+          width={150}
+          height={150}
+          src={import.meta.env.VITE_API_URL || 'http://localhost:7000/' + device.img}
+        />
         <div className="text-black-50  d-flex justify-content-between align-items-center">
           <span>Samsung...</span>
           <div className="d-flex align-items-center">
